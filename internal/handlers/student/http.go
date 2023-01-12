@@ -1,15 +1,15 @@
-package http
+package student
 
 import (
 	"net/http"
 
-	"github.com/abdullahaaf/go-clean-arch-crudstudent/student/model"
-	"github.com/abdullahaaf/go-clean-arch-crudstudent/student/usecase"
+	"github.com/abdullahaaf/go-clean-arch-crudstudent/internal/core/domain"
+	"github.com/abdullahaaf/go-clean-arch-crudstudent/internal/core/ports"
 	"github.com/labstack/echo"
 )
 
 type StudentHandler struct {
-	studentUseCase usecase.StudentUseCase
+	studentUseCase ports.StudentUseCase
 }
 
 func (stud *StudentHandler) GetAll(c echo.Context) error {
@@ -27,7 +27,7 @@ func (stud *StudentHandler) GetByName(c echo.Context) error {
 }
 
 func (stud *StudentHandler) Store(c echo.Context) error {
-	var student model.Student
+	var student domain.Student
 	err := c.Bind(&student)
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, err)
@@ -41,7 +41,7 @@ func (stud *StudentHandler) Store(c echo.Context) error {
 	return c.JSON(http.StatusCreated, store)
 }
 
-func NewStudentHandler(e *echo.Echo, studusecase usecase.StudentUseCase) {
+func NewStudentHandler(e *echo.Echo, studusecase ports.StudentUseCase) {
 	handler := &StudentHandler{
 		studentUseCase: studusecase,
 	}

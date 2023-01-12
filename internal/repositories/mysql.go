@@ -1,10 +1,11 @@
-package repository
+package repositories
 
 import (
 	"database/sql"
 	"fmt"
 
-	"github.com/abdullahaaf/go-clean-arch-crudstudent/student/model"
+	"github.com/abdullahaaf/go-clean-arch-crudstudent/internal/core/domain"
+	"github.com/abdullahaaf/go-clean-arch-crudstudent/internal/core/ports"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -13,20 +14,20 @@ type mysqlStudentRepository struct {
 	Conn *sql.DB
 }
 
-func NewMysqlStudentRepository(Conn *sql.DB) StudentRepository {
+func NewMysqlStudentRepository(Conn *sql.DB) ports.StudentRepository {
 	return &mysqlStudentRepository{Conn: Conn}
 }
 
-func (m *mysqlStudentRepository) GetAll() ([]*model.Student, error) {
+func (s *mysqlStudentRepository) GetAll() ([]*domain.Student, error) {
 	query := `SELECT name,registered_date,address FROM student_data`
-	rows, err := m.Conn.Query(query)
+	rows, err := s.Conn.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	result := make([]*model.Student, 0)
+	result := make([]*domain.Student, 0)
 	for rows.Next() {
-		stud := new(model.Student)
+		stud := new(domain.Student)
 		err = rows.Scan(
 			&stud.Name,
 			&stud.RegisteredDate,
@@ -43,10 +44,10 @@ func (m *mysqlStudentRepository) GetAll() ([]*model.Student, error) {
 	return result, nil
 }
 
-func (m *mysqlStudentRepository) GetByName(name string) *model.Student {
+func (s *mysqlStudentRepository) GetByName(name string) *domain.Student {
 	query := `SELECT name,registered_date,address FROM student_data WHERE name = ?`
-	student := new(model.Student)
-	row := m.Conn.QueryRow(query, name)
+	student := new(domain.Student)
+	row := s.Conn.QueryRow(query, name)
 	row.Scan(
 		&student.Name,
 		&student.RegisteredDate,
@@ -56,9 +57,9 @@ func (m *mysqlStudentRepository) GetByName(name string) *model.Student {
 	return student
 }
 
-func (m *mysqlStudentRepository) Store(stud *model.Student) (int64, error) {
+func (s *mysqlStudentRepository) Store(stud *domain.Student) (int64, error) {
 	query := `INSERT student_data SET name = ?, registered_date = ?, address = ?`
-	stmt, err := m.Conn.Prepare(query)
+	stmt, err := s.Conn.Prepare(query)
 	if err != nil {
 		return 0, err
 	}
@@ -70,10 +71,10 @@ func (m *mysqlStudentRepository) Store(stud *model.Student) (int64, error) {
 	return res.LastInsertId()
 }
 
-func (m *mysqlStudentRepository) Update(stud *model.Student) (*model.Student, error) {
+func (s *mysqlStudentRepository) Update(stud *domain.Student) (*domain.Student, error) {
 	query := `UPDATE student_data SET registered_date = ?, address = ? WHERE name = ?`
 
-	stmt, err := m.Conn.Prepare(query)
+	stmt, err := s.Conn.Prepare(query)
 	if err != nil {
 		return nil, err
 	}
@@ -94,9 +95,9 @@ func (m *mysqlStudentRepository) Update(stud *model.Student) (*model.Student, er
 	return stud, nil
 }
 
-func (m *mysqlStudentRepository) Delete(name string) (bool, error) {
+func (s *mysqlStudentRepository) Delete(name string) (bool, error) {
 	query := `DELETE FROM student_data WHERE name = ?`
-	stmt, err := m.Conn.Prepare(query)
+	stmt, err := s.Conn.Prepare(query)
 	if err != nil {
 		return false, nil
 	}

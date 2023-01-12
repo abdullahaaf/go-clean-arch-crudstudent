@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 
-	httpDeliver "github.com/abdullahaaf/go-clean-arch-crudstudent/student/delivery/http"
-	"github.com/abdullahaaf/go-clean-arch-crudstudent/student/repository"
-	"github.com/abdullahaaf/go-clean-arch-crudstudent/student/usecase"
+	"github.com/abdullahaaf/go-clean-arch-crudstudent/internal/core/usecase"
+	"github.com/abdullahaaf/go-clean-arch-crudstudent/internal/handlers/student"
+	"github.com/abdullahaaf/go-clean-arch-crudstudent/internal/repositories"
 	"github.com/labstack/echo"
 )
 
@@ -19,9 +19,9 @@ func main() {
 	defer dbConn.Close()
 
 	e := echo.New()
-	studentRepo := repository.NewMysqlStudentRepository(dbConn)
+	studentRepo := repositories.NewMysqlStudentRepository(dbConn)
 	studentUseCase := usecase.NewStudentUseCase(studentRepo)
-	httpDeliver.NewStudentHandler(e, studentUseCase)
+	student.NewStudentHandler(e, studentUseCase)
 
 	e.Start("localhost:9003")
 }
