@@ -1,3 +1,5 @@
+For implementation of hexagonal architecture, you can checkout to branch [hexa-arch](https://github.com/abdullahaaf/go-clean-arch-crudstudent/tree/hexa-arch)
+
 This is an example implementation of Clean Architecture by Uncle Bob in Golang, and this repository referenced from this repo (https://github.com/bxcodec/go-clean-arch/tree/v1) with some customization by me.
 
 This Project has 4 domain layer :
