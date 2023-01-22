@@ -6,10 +6,10 @@ import (
 )
 
 type StudentUseCase interface {
-	GetAll() ([]*model.Student, error)
-	GetByName(name string) *model.Student
-	Store(student *model.Student) (*model.Student, error)
-	Update(student *model.Student) (*model.Student, error)
+	GetAll() ([]*model.Students, error)
+	GetByName(name string) *model.Students
+	Store(student *model.Students) (*model.Students, error)
+	Update(student *model.Students) (*model.Students, error)
 	Delete(name string) (bool, error)
 }
 
@@ -21,7 +21,7 @@ func NewStudentUseCase(stud repository.StudentRepository) StudentUseCase {
 	return &studentUseCase{studentRepos: stud}
 }
 
-func (stud *studentUseCase) GetAll() ([]*model.Student, error) {
+func (stud *studentUseCase) GetAll() ([]*model.Students, error) {
 	listStudent, err := stud.studentRepos.GetAll()
 	if err != nil {
 		return nil, err
@@ -29,12 +29,12 @@ func (stud *studentUseCase) GetAll() ([]*model.Student, error) {
 	return listStudent, nil
 }
 
-func (stud *studentUseCase) GetByName(name string) *model.Student {
+func (stud *studentUseCase) GetByName(name string) *model.Students {
 	detailStudent := stud.studentRepos.GetByName(name)
 	return detailStudent
 }
 
-func (stud *studentUseCase) Store(student *model.Student) (*model.Student, error) {
+func (stud *studentUseCase) Store(student *model.Students) (*model.Students, error) {
 	id, err := stud.studentRepos.Store(student)
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func (stud *studentUseCase) Store(student *model.Student) (*model.Student, error
 	return student, nil
 }
 
-func (stud *studentUseCase) Update(student *model.Student) (*model.Student, error) {
+func (stud *studentUseCase) Update(student *model.Students) (*model.Students, error) {
 	return stud.studentRepos.Update(student)
 }
 func (stud *studentUseCase) Delete(name string) (bool, error) {

@@ -27,7 +27,7 @@ func (stud *StudentHandler) GetByName(c echo.Context) error {
 }
 
 func (stud *StudentHandler) Store(c echo.Context) error {
-	var student model.Student
+	var student model.Students
 	err := c.Bind(&student)
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, err)
